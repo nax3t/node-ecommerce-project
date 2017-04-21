@@ -1,0 +1,65 @@
+<% layout('layouts/boilerplate') -%>
+
+<h4>Date:</h4>
+<%= product.formattedDate %>
+
+<h4>Time:</h4>
+<%= product.time %>
+
+<h4>Stock:</h4>
+<%= product.stock %>
+
+<form action="/products/<%= product._id %>/charge" id="alcatraz-purchase-form" method="POST">
+	<div>
+		<label for="bundled-product">Choose product to bundle with:</label>
+		<select name="bundled-product" id="bundled-product">
+			<option value="" selected disabled>Select product:</option>
+			<option value="1-day-big-bus">1 Day Big Bus</option>
+			<option value="2-day-big-bus">2 Day Big Bus</option>
+		</select>
+	</div>
+	<div>
+		<label for="adults">Adults:</label>
+		<input type="number" name="adults" id="adults" step="1" min="0" value="0" required>
+	</div>
+	<div>
+		<label for="children">Children:</label>
+		<input type="number" name="children" id="children" step="1" min="0" value="0" required>
+	</div>
+	<div>
+		<h4>Total:</h4>
+		$<span id="totalDisplay">0.00</span>
+	</div>
+	<div>
+		<script class="stripe-button" id="stripe" src="//checkout.stripe.com/v2/checkout.js" data-locale="auto" data-description="<%= product.formattedDate %>" data-amount="0" data-key="<%= keyPublishable %>"></script>
+	</div>
+</form>
+
+<script>
+	$("#alcatraz-purchase-form").on("input", function(e) {
+
+		$totalDisplay = $("#totalDisplay");
+
+		var prices = {
+			"1-day-big-bus": {
+				adults: 140,
+				children: 120
+			},
+			"2-day-big-bus": {
+				adults: 180,
+				children: 160
+			}
+		};
+
+		// calculate purchase total
+		var adults = prices[e.currentTarget[0].value][e.currentTarget[1].id] * Number(e.currentTarget[1].value);
+		var children = prices[e.currentTarget[0].value][e.currentTarget[2].id] * Number(e.currentTarget[2].value);
+		var sum = (adults + children).toFixed(2);
+
+		// update DOM
+		$totalDisplay.text(sum);
+
+		// set data-amount attribute for stripe form
+		$("#stripe").attr("data-amount", sum)
+	});
+</script>

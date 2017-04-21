@@ -1,0 +1,12 @@
+<% layout('layouts/boilerplate') -%>
+
+<div class="row">
+	<% products.forEach(function(product) { %>
+	<div class="col-md-3">
+		<a href="/products/<%= product.id %>" class="thumbnail">
+			<img src="/images/alcatraz.jpg" alt="Alcatraz">
+			<h4 class="caption"><%= product.formattedDate %></h4>
+		</a>
+	</div>
+	<% }); %>
+</div>

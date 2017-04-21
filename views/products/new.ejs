@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate') -%>
+
+<form action="/products" method="POST">
+	<label for="date">Date:</label>
+	<input type="date" id="date" name="date" required>
+
+	<label for="time">Time:</label>
+	<input type="text" name="time" id="time" required>
+	
+	<label for="stock">Stock Quantity:</label>
+	<input type="number" step="1" min="1" id="stock" name="stock" required>
+
+	<input type="submit">
+</form>

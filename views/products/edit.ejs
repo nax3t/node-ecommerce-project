@@ -1,0 +1,17 @@
+<% layout('layouts/boilerplate') -%>
+
+<form action="/products/<%= product._id %>?_method=PUT" method="POST">
+	<div>
+		<label for="date">Date:</label>
+		<input type="date" id="date" name="date" value="<%= new Date(product.date).toISOString().substring(0, 10) %>" required>
+	</div>
+	<div>
+		<label for="time">Time:</label>
+		<input type="text" name="time" id="time" value="<%= product.time %>" required>
+	</div>
+	<div>
+		<label for="stock">Stock Quantity:</label>
+		<input type="number" step="1" min="1" id="stock" name="stock" value="<%= product.stock %>" required>
+	</div>
+	<input type="submit">
+</form>

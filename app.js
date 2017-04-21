@@ -1,14 +1,16 @@
 // dot env
 require('dotenv').config();
-
 const keyPublishable = process.env.PUBLISHABLE_KEY;
-const keySecret = process.env.SECRET_KEY;
+
 const express = require("express");
 const app = express();
-const stripe = require("stripe")(keySecret);
 const engine = require('ejs-mate');
 const bodyParser = require('body-parser');
+const productRoutes = require("./routes/products");
+const mongoose = require("mongoose");
+const methodOverride = require("method-override");
 
+mongoose.connect("mongodb://localhost/node-ecommerce-test");
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -17,25 +19,13 @@ app.engine('ejs', engine);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-
-app.get("/", (req, res) =>
-  res.render("index", {keyPublishable: keyPublishable}));
-
-app.post("/charge", (req, res) => {
-  let amount = 500;
-  stripe.customers.create({
-    email: req.body.stripeEmail,
-    source: req.body.stripeToken
-  })
-  .then(customer =>
-    stripe.charges.create({
-      amount,
-      description: "Sample Charge",
-         currency: "usd",
-         customer: customer.id
-    }))
-  .then(charge => res.render("charge"));
+app.use(methodOverride('_method'));
+app.use(function(req, res, next) {
+  app.locals.keyPublishable = keyPublishable;
+  next();
 });
+
+app.use("/products", productRoutes);
 
 app.listen(3000, () => {
 	console.log('Server running, listening on port 3000');
