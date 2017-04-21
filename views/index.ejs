@@ -1,0 +1,9 @@
+<% layout('layouts/boilerplate') -%>
+
+<form action="/charge" method="post">
+	<article>
+		<label>Amount: $5.00</label>
+	</article>
+	
+	<script class="stripe-button" src="//checkout.stripe.com/v2/checkout.js" data-locale="auto" data-description="Sample Charge" data-amount="500" data-key="<%= keyPublishable %>"></script>
+</form>
